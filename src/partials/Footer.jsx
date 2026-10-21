@@ -11,22 +11,25 @@ const socialMedia = [
   {
     name: "Instagram",
     icon: FaInstagram,
-    link: "https://www.instagram.com/USERNAME",
+    link: "https://www.instagram.com/smartdeck10_",
   },
+
   {
     name: "Facebook",
     icon: FaFacebook,
-    link: "https://www.facebook.com/USERNAME",
+    link: "#",
+    // https://www.facebook.com/USERNAME
   },
   {
     name: "YouTube",
     icon: FaYoutube,
-    link: "https://www.youtube.com/@USERNAME",
+    link: "#",
+    // https://www.youtube.com/@USERNAME
   },
   {
     name: "TikTok",
     icon: FaTiktok,
-    link: "https://www.tiktok.com/@USERNAME",
+    link: "https://www.tiktok.com/@smartdeck10_",
   },
 ];
 
