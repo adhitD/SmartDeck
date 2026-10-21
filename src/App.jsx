@@ -13,7 +13,8 @@ import Footer from "./partials/Footer";
 import Testimoni from "./partials/Testimonials";
 import ScrollReveal from "./partials/ScrollReveal";
 
-export const nomorwa = "6281234567890"; // 
+export const nomorwa = "6281234567890"; //
+ 
 export default function App() {
 
   return (
