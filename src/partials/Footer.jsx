@@ -1,0 +1,81 @@
+import Brand from "./Brand";
+
+const nav = [
+  ["Beranda", "#home"],
+  ["Layanan", "#layanan"],
+  ["Paket", "#paket"],
+  ["Tentang", "#tentang"],
+  ["Kontak", "#kontak"],
+];
+
+export default function Footer() {
+  return (
+    <footer className="bg-[#01366D] px-5 pb-8 pt-14 text-white sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <Brand light />
+
+          <p className="mt-5 max-w-xs text-sm leading-7 text-white/60">
+            Membantu pendidik menciptakan pengalaman belajar yang
+            lebih visual, interaktif, dan bermakna melalui Canva
+            dan Wordwall.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="mb-4 font-extrabold text-[#F7963A]">
+            Navigasi
+          </h4>
+
+          <div className="grid gap-3 text-sm text-white/70">
+            {nav.map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                className="transition hover:text-white"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="mb-4 font-extrabold text-[#F7963A]">
+            Layanan
+          </h4>
+
+          <div className="grid gap-3 text-sm text-white/70">
+            <a href="#layanan">Media Canva</a>
+            <a href="#layanan">Evaluasi Wordwall</a>
+            <a href="#paket">Paket kombinasi</a>
+            <a href="#kontak">Konsultasi proyek</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="mb-4 font-extrabold text-[#F7963A]">
+            Hubungi SmartDeck
+          </h4>
+
+          <p className="text-sm leading-7 text-white/65">
+            Punya pertanyaan atau ide media pembelajaran? Ceritakan
+            melalui formulir konsultasi.
+          </p>
+
+          <a
+            href="#kontak"
+            className="mt-4 inline-flex rounded-full bg-[#F7963A] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-orange-500"
+          >
+            Mulai konsultasi ↗
+          </a>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-white/45">
+        © {new Date().getFullYear()} SmartDeck. Media pembelajaran
+        interaktif Canva + Wordwall.
+      </div>
+    </footer>
+  );
+}
