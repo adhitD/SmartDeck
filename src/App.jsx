@@ -88,7 +88,6 @@ const testimonials = [
   },
 ];
 
-<<<<<<< HEAD
 function Brand({ light = false }) {
   return (
     <a
@@ -209,20 +208,10 @@ function SectionHeading({ eyebrow, title, desc, light = false }) {
     </div>
   );
 }
-=======
-import Navbar from "./partials/Navbar";
-import AlurPembelajaran from "./partials/AlurPembelajaran";
-import CTA from "./partials/CTA";
-import FAQ from "./partials/FAQ";
-import Footer from "./partials/Footer";
-import Testimoni from "./partials/Testimonials";
-import ScrollReveal from "./partials/ScrollReveal";
->>>>>>> origin
 
 export const nomorwa = "6281234567890"; //
  
 export default function App() {
-<<<<<<< HEAD
   const [menuOpen, setMenuOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(0);
   const [form, setForm] = useState({
@@ -243,9 +232,6 @@ export default function App() {
     const text = `Halo SmartDeck!%0A%0ANama: ${encodeURIComponent(form.name)}%0AEmail: ${encodeURIComponent(form.email)}%0AKebutuhan: ${encodeURIComponent(form.need)}%0APesan: ${encodeURIComponent(form.message)}`;
     window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
   };
-=======
-
->>>>>>> origin
   return (
     <div className="min-h-screen overflow-hidden bg-white text-slate-800">
       <header className="sticky top-0 z-40 border-b border-blue-50 bg-white/90 shadow-sm backdrop-blur-xl">
@@ -283,7 +269,6 @@ export default function App() {
       </header>
 
       <main>
-<<<<<<< HEAD
         <section
           id="home"
           className="relative mx-auto grid max-w-7xl items-center gap-16 px-5 py-16 sm:px-8 md:min-h-[690px] md:grid-cols-2 md:py-24"
@@ -763,52 +748,9 @@ export default function App() {
             </form>
           </div>
         </section>
-=======
-        <ScrollReveal direction="left">
-          <Home />
-        </ScrollReveal>
-
-        <ScrollReveal direction="right">
-          <AlurPembelajaran />
-        </ScrollReveal>
-
-        <ScrollReveal direction="left">
-          <Tentang />
-        </ScrollReveal>
-
-        <ScrollReveal direction="right">
-          <Layanan />
-        </ScrollReveal>
-
-        <ScrollReveal direction="left">
-          <Paket />
-        </ScrollReveal>
-
-        <ScrollReveal direction="right">
-          <CTA />
-        </ScrollReveal>
-
-        <ScrollReveal direction="left">
-          <FAQ />
-        </ScrollReveal>
-
-        <ScrollReveal direction="right">
-          <Testimoni />
-        </ScrollReveal>
-
-        {/* <ScrollReveal direction="left">
-          <Kontak />
-        </ScrollReveal> */}
->>>>>>> origin
       </main>
 
       <Footer />
     </div>
-<<<<<<< HEAD
   );  
 }
-=======
-  );
-}
-
->>>>>>> origin
