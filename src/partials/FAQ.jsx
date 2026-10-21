@@ -11,11 +11,11 @@ const faqs = [
   },
   {
     q: "Apakah saya bisa memesan Canva dan Wordwall saja?",
-    a: "Bisa. Anda dapat memilih satu layanan atau menggabungkan keduanya sesuai kebutuhan dan anggaran.",
+    a: "Bisa. Anda dapat mendiskusikan dengan admin SmartDeck terkait apa saja yang ingin Anda buat.",
   },
   {
     q: "Bagaimana cara memulai pemesanan?",
-    a: "Isi formulir konsultasi di bagian kontak. Informasi tersebut akan disiapkan sebagai pesan WhatsApp untuk Anda tinjau dan kirim.",
+    a: "Mulai Konsultasi dengan menekan tombol 'Konsultasi Sekarang'. Tombol ini akan mengarahkan anda ke Whatsapp untuk berdiskusi lebih lanjut terkait apa yang ingin anda buat. ",
   },
 ];
 

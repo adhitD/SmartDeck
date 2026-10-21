@@ -10,6 +10,8 @@ import AlurPembelajaran from "./partials/AlurPembelajaran";
 import CTA from "./partials/CTA";
 import FAQ from "./partials/FAQ";
 import Footer from "./partials/Footer";
+import Testimoni from "./partials/Testimonials";
+import ScrollReveal from "./partials/ScrollReveal";
 
 export default function App() {
   return (
@@ -17,24 +19,45 @@ export default function App() {
       <Navbar />
 
       <main>
-        <Home />
+        <ScrollReveal direction="left">
+          <Home />
+        </ScrollReveal>
 
-        <AlurPembelajaran />
+        <ScrollReveal direction="right">
+          <AlurPembelajaran />
+        </ScrollReveal>
 
-        <Tentang />
+        <ScrollReveal direction="left">
+          <Tentang />
+        </ScrollReveal>
 
-        <Layanan />
+        <ScrollReveal direction="right">
+          <Layanan />
+        </ScrollReveal>
 
-        <Paket />
+        <ScrollReveal direction="left">
+          <Paket />
+        </ScrollReveal>
 
-        <CTA />
+        <ScrollReveal direction="right">
+          <CTA />
+        </ScrollReveal>
 
-        <FAQ />
+        <ScrollReveal direction="left">
+          <FAQ />
+        </ScrollReveal>
 
-        <Kontak />
+        <ScrollReveal direction="right">
+          <Testimoni />
+        </ScrollReveal>
+
+        {/* <ScrollReveal direction="left">
+          <Kontak />
+        </ScrollReveal> */}
       </main>
 
       <Footer />
     </div>
-  );  
+  );
 }
+
