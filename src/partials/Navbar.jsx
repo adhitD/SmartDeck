@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Brand from "./Brand";
+import { nomorwa } from "../App.jsx";
 
 const nav = [
   ["Beranda", "#home"],
   ["Layanan", "#layanan"],
-  ["Paket", "#paket"],
   ["Tentang", "#tentang"],
   ["Kontak", "#kontak"],
 ];
@@ -48,7 +48,7 @@ export default function Navbar() {
           ))}
 
           <a
-            href="#kontak"
+            href={`https://wa.me/${nomorwa}?text=Halo%20SmartDeck%2C%20saya%20ingin%20konsultasi%20gratis.`}
             onClick={closeMenu}
             className="ml-1 rounded-full bg-gradient-to-r from-[#024C99] to-[#009DFC] px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5"
           >
