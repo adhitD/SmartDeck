@@ -1,4 +1,37 @@
 import Brand from "./Brand";
+import { nomorwa } from "../App.jsx";
+import {
+  FaInstagram,
+  FaFacebook,
+  FaYoutube,
+  FaTiktok,
+} from "react-icons/fa";
+
+const socialMedia = [
+  {
+    name: "Instagram",
+    icon: FaInstagram,
+    link: "https://www.instagram.com/smartdeck10_",
+  },
+
+  {
+    name: "Facebook",
+    icon: FaFacebook,
+    link: "#",
+    // https://www.facebook.com/USERNAME
+  },
+  {
+    name: "YouTube",
+    icon: FaYoutube,
+    link: "#",
+    // https://www.youtube.com/@USERNAME
+  },
+  {
+    name: "TikTok",
+    icon: FaTiktok,
+    link: "https://www.tiktok.com/@smartdeck10_",
+  },
+];
 
 const nav = [
   ["Beranda", "#home"],
@@ -40,18 +73,31 @@ export default function Footer() {
           </div>
         </div>
 
-        <div>
-          <h4 className="mb-4 font-extrabold text-[#F7963A]">
-            Layanan
-          </h4>
+<div>
+  <h4 className="mb-4 font-extrabold text-[#F7963A]">
+    Media Sosial
+  </h4>
 
-          <div className="grid gap-3 text-sm text-white/70">
-            <a href="#layanan">Media Canva</a>
-            <a href="#layanan">Evaluasi Wordwall</a>
-            <a href="#paket">Paket kombinasi</a>
-            <a href="#kontak">Konsultasi proyek</a>
-          </div>
-        </div>
+  <div className="flex items-center gap-4">
+    {socialMedia.map((social) => {
+      const Icon = social.icon;
+
+      return (
+        <a
+          key={social.name}
+          href={social.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.name}
+          title={social.name}
+          className="text-2xl text-white/70 transition hover:-translate-y-1 hover:text-[#F7963A]"
+        >
+          <Icon />
+        </a>
+      );
+    })}
+  </div>
+</div>
 
         <div>
           <h4 className="mb-4 font-extrabold text-[#F7963A]">
@@ -64,7 +110,7 @@ export default function Footer() {
           </p>
 
           <a
-            href="#kontak"
+            href={`https://wa.me/${nomorwa}?text=Halo%20SmartDeck%2C%20saya%20ingin%20konsultasi%20gratis.`}
             className="mt-4 inline-flex rounded-full bg-[#F7963A] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-orange-500"
           >
             Mulai konsultasi ↗

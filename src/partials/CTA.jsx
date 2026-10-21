@@ -1,3 +1,5 @@
+import { nomorwa } from "../App.jsx";
+
 export default function CTA() {
   return (
     <section className="bg-gradient-to-r from-[#024C99] to-[#009DFC] px-5 py-16 text-white sm:px-8">
@@ -18,7 +20,7 @@ export default function CTA() {
         </div>
 
         <a
-          href="#kontak"
+          href={`https://wa.me/${nomorwa}?text=Halo%20SmartDeck%2C%20saya%20ingin%20konsultasi%20gratis.`}
           className="shrink-0 rounded-full bg-[#F7963A] px-7 py-4 font-extrabold text-white shadow-xl shadow-blue-950/20 transition hover:-translate-y-1 hover:bg-orange-500"
         >
           Konsultasi sekarang ↗
