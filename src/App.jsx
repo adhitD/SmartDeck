@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 const services = [
   {
@@ -88,78 +88,20 @@ const testimonials = [
   },
 ];
 
-const WA_NUMBER = "6285166817952";
-
-/* ---------- smooth scroll helper ---------- */
-const easeInOutCubic = (t) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-let scrollRaf = 0;
-let scrollCleanup = null;
-
-function getTargetTop(id) {
-  if (id === "home") return 0;
-  const el = document.getElementById(id);
-  if (!el) return null;
-  // scroll to the section content, not the section padding -> no empty gap
-  const anchor = el.firstElementChild || el;
-  const header = document.querySelector("header");
-  const offset = (header ? header.offsetHeight : 0) + 12;
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  const top = anchor.getBoundingClientRect().top + window.scrollY - offset;
-  return Math.max(0, Math.min(top, max));
-}
-
-function scrollToId(id, { instant = false } = {}) {
-  cancelAnimationFrame(scrollRaf);
-  if (scrollCleanup) scrollCleanup();
-  const first = getTargetTop(id);
-  if (first === null) return;
-  const from = window.scrollY;
-  if (instant || prefersReducedMotion()) {
-    window.scrollTo({ top: first, behavior: "instant" });
-    return;
-  }
-  const duration = Math.min(1100, Math.max(600, Math.abs(first - from) * 0.5));
-  const events = ["wheel", "touchstart", "keydown", "mousedown"];
-  const stop = () => {
-    cancelAnimationFrame(scrollRaf);
-    events.forEach((ev) => window.removeEventListener(ev, stop));
-    scrollCleanup = null;
-  };
-  scrollCleanup = stop;
-  events.forEach((ev) => window.addEventListener(ev, stop, { passive: true }));
-  const start = performance.now();
-  const step = (now) => {
-    const t = Math.min(1, (now - start) / duration);
-    const to = getTargetTop(id) ?? first;
-    window.scrollTo({
-      top: from + (to - from) * easeInOutCubic(t),
-      behavior: "instant",
-    });
-    if (t < 1) scrollRaf = requestAnimationFrame(step);
-    else stop();
-  };
-  scrollRaf = requestAnimationFrame(step);
-}
-
 function Brand({ light = false }) {
   return (
     <a
       href="#home"
       className={`flex items-center gap-3 font-extrabold tracking-tight ${light ? "text-white" : "text-[#024C99]"}`}
     >
-      <img src="logo.png" className="w-40 xl:w-40 h-auto" alt="SmartDeck" />{" "}
+      <img src="logo.png" className="w-40 xl:w-40 h-auto" alt="" />{" "}
     </a>
   );
 }
 
 function CanvaPreview() {
   return (
-    <div className="animate-float relative mx-auto w-full max-w-[520px]">
+    <div className="relative mx-auto w-full max-w-[520px]">
       <div className="absolute -left-3 top-12 h-24 w-24 rounded-full bg-[#F7963A]/20 blur-2xl sm:-left-8" />
       <div className="absolute -right-3 bottom-5 h-32 w-32 rounded-full bg-[#009DFC]/20 blur-2xl" />
       <div className="relative rounded-[2rem] border border-blue-100 bg-white p-4 shadow-2xl shadow-blue-100/70 sm:p-6">
@@ -245,7 +187,7 @@ function CanvaPreview() {
 
 function SectionHeading({ eyebrow, title, desc, light = false }) {
   return (
-    <div data-reveal className="mx-auto mb-12 max-w-2xl text-center">
+    <div className="mx-auto mb-12 max-w-2xl text-center">
       <p
         className={`text-xs font-extrabold uppercase tracking-[.22em] ${light ? "text-[#F7963A]" : "text-[#009DFC]"}`}
       >
@@ -270,9 +212,6 @@ function SectionHeading({ eyebrow, title, desc, light = false }) {
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(0);
-  const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState("home");
-  const headerRef = useRef(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -286,156 +225,31 @@ export default function App() {
     ["Tentang", "#tentang"],
     ["Kontak", "#kontak"],
   ];
-  /* anchor clicks -> custom smooth scroll (desktop + mobile) */
-  useEffect(() => {
-    const onClick = (e) => {
-      if (e.defaultPrevented || e.button !== 0) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = e.target.closest?.('a[href^="#"]');
-      if (!a) return;
-      const id = decodeURIComponent(a.getAttribute("href").slice(1));
-      if (!id || !document.getElementById(id)) return;
-      e.preventDefault();
-      setMenuOpen(false);
-      scrollToId(id);
-      if (window.location.hash !== `#${id}`) {
-        window.history.pushState(null, "", `#${id}`);
-      }
-    };
-    const onHash = () => {
-      const id = window.location.hash.slice(1);
-      if (id) scrollToId(id);
-    };
-    document.addEventListener("click", onClick);
-    window.addEventListener("hashchange", onHash);
-    const initial = window.location.hash.slice(1);
-    const t = initial
-      ? setTimeout(() => scrollToId(initial, { instant: true }), 80)
-      : null;
-    return () => {
-      document.removeEventListener("click", onClick);
-      window.removeEventListener("hashchange", onHash);
-      if (t) clearTimeout(t);
-    };
-  }, []);
-
-  /* header shadow + active nav */
-  useEffect(() => {
-    const ids = ["home", "layanan", "tentang", "paket", "kontak"];
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      const line = (headerRef.current?.offsetHeight || 0) + window.innerHeight * 0.25;
-      let current = "home";
-      let best = -Infinity;
-      ids.forEach((id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const top = el.getBoundingClientRect().top;
-        if (top <= line && top > best) {
-          best = top;
-          current = id;
-        }
-      });
-      if (window.innerHeight + y >= document.documentElement.scrollHeight - 4) {
-        current = "kontak";
-      }
-      setActive(current);
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  /* reveal on scroll */
-  useEffect(() => {
-    const els = document.querySelectorAll("[data-reveal]");
-    if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("is-in"));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((en) => {
-          if (en.isIntersecting) {
-            en.target.classList.add("is-in");
-            io.unobserve(en.target);
-          }
-        }),
-      { rootMargin: "0px 0px -6% 0px", threshold: 0.1 },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-
-  /* close mobile menu: Escape / tap outside */
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
-    const onDown = (e) => {
-      if (headerRef.current && !headerRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onDown);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onDown);
-    };
-  }, [menuOpen]);
-
   const submitContact = (e) => {
     e.preventDefault();
-    const lines = [
-      "Halo SmartDeck!",
-      "",
-      `Nama: ${form.name.trim()}`,
-      `Email: ${form.email.trim()}`,
-      `Kebutuhan: ${form.need}`,
-      `Pesan: ${form.message.trim()}`,
-    ];
-    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-    const w = window.open(url, "_blank");
-    if (w) w.opener = null;
-    else window.location.href = url;
+    const text = `Halo SmartDeck!%0A%0ANama: ${encodeURIComponent(form.name)}%0AEmail: ${encodeURIComponent(form.email)}%0AKebutuhan: ${encodeURIComponent(form.need)}%0APesan: ${encodeURIComponent(form.message)}`;
+    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
   };
   return (
-    <div className="min-h-screen overflow-x-clip bg-white text-slate-800">
-      <header
-        ref={headerRef}
-        className={`sticky top-0 z-40 border-b bg-white/90 backdrop-blur-xl ${scrolled ? "border-blue-100 shadow-md shadow-blue-100/50" : "border-blue-50 shadow-sm"}`}
-      >
+    <div className="min-h-screen overflow-hidden bg-white text-slate-800">
+      <header className="sticky top-0 z-40 border-b border-blue-50 bg-white/90 shadow-sm backdrop-blur-xl">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8">
           <Brand />
           <button
-            className="grid h-11 w-11 place-items-center rounded-xl text-2xl text-[#024C99] md:hidden"
+            className="rounded-xl p-2 text-2xl text-[#024C99] md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
-            aria-expanded={menuOpen}
+            aria-label="Buka menu"
           >
-            {menuOpen ? "✕" : "☰"}
+            ☰
           </button>
           <div
-            className={`absolute left-0 right-0 top-full flex origin-top flex-col gap-1 border-b border-blue-100 bg-white p-5 shadow-lg duration-300 ${menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-3 opacity-0"} md:visible md:static md:translate-y-0 md:flex-row md:items-center md:gap-2 md:border-0 md:bg-transparent md:p-0 md:opacity-100 md:shadow-none`}
+            className={`${menuOpen ? "absolute left-0 right-0 top-full flex flex-col gap-1 border-b border-blue-100 bg-white p-5 shadow-lg" : "hidden"} md:static md:flex md:flex-row md:items-center md:gap-2 md:border-0 md:bg-transparent md:p-0 md:shadow-none`}
           >
             {nav.map(([label, href]) => (
               <a
                 key={href}
                 onClick={() => setMenuOpen(false)}
-                className={`rounded-lg px-3 py-3 text-sm font-bold transition md:py-2 ${active === href.slice(1) ? "bg-blue-50 text-[#024C99]" : "text-slate-600 hover:bg-blue-50 hover:text-[#024C99]"}`}
+                className="rounded-lg px-3 py-2 text-sm font-bold text-slate-600 transition hover:bg-blue-50 hover:text-[#024C99]"
                 href={href}
               >
                 {label}
@@ -458,7 +272,7 @@ export default function App() {
           className="relative mx-auto grid max-w-7xl items-center gap-16 px-5 py-16 sm:px-8 md:min-h-[690px] md:grid-cols-2 md:py-24"
         >
           <div className="absolute -left-24 top-12 h-64 w-64 rounded-full bg-blue-50 blur-3xl" />
-          <div data-reveal className="relative z-10">
+          <div className="relative z-10">
             <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-sm font-bold text-[#024C99]">
               <span className="text-[#F7963A]">✦</span> Partner media
               pembelajaran kreatif
@@ -494,11 +308,7 @@ export default function App() {
               <span>✓ Lebih menarik untuk siswa</span>
             </div>
           </div>
-          <div
-            data-reveal
-            style={{ "--d": "150ms" }}
-            className="relative z-10 px-2 pb-5 pt-3 sm:px-6"
-          >
+          <div className="relative z-10 px-2 pb-5 pt-3 sm:px-6">
             <CanvaPreview />
           </div>
         </section>
@@ -531,10 +341,10 @@ export default function App() {
 
         <section id="tentang" className="px-5 py-20 sm:px-8 md:py-24">
           <div className="mx-auto grid max-w-7xl items-center gap-12 md:grid-cols-2">
-            <div data-reveal className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#024C99] to-[#009DFC] p-8 text-white sm:p-12">
+            <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#024C99] to-[#009DFC] p-8 text-white sm:p-12">
               <div className="absolute -right-12 -top-12 h-48 w-48 rounded-full border-[28px] border-white/10" />
               <div className="absolute -bottom-16 -left-12 h-48 w-48 rounded-full bg-[#F7963A]" />
-              <div data-reveal className="relative z-10">
+              <div className="relative z-10">
                 <span className="rounded-full bg-white/15 px-4 py-2 text-xs font-extrabold uppercase tracking-widest">
                   Tentang SmartDeck
                 </span>
@@ -563,7 +373,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div data-reveal>
+            <div>
               <p className="text-xs font-extrabold uppercase tracking-[.22em] text-[#009DFC]">
                 Belajar dengan cara yang lebih hidup
               </p>
@@ -593,13 +403,8 @@ export default function App() {
                     title: "Siap digunakan di kelas",
                     desc: "Media diserahkan dengan alur yang mudah diikuti dan disesuaikan.",
                   },
-                ].map((x, i) => (
-                  <div
-                    key={x.n}
-                    data-reveal
-                    style={{ "--d": `${i * 120}ms` }}
-                    className="flex gap-4"
-                  >
+                ].map((x) => (
+                  <div key={x.n} className="flex gap-4">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-blue-50 font-black text-[#024C99]">
                       {x.n}
                     </span>
@@ -629,11 +434,9 @@ export default function App() {
               desc="Pilih layanan yang dibutuhkan atau kombinasikan semuanya menjadi satu pengalaman pembelajaran."
             />
             <div className="grid gap-6 md:grid-cols-3">
-              {services.map((s, i) => (
+              {services.map((s) => (
                 <article
                   key={s.number}
-                  data-reveal
-                  style={{ "--d": `${i * 110}ms` }}
                   className="group relative overflow-hidden rounded-3xl border border-blue-100 bg-white p-7 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-100/70"
                 >
                   <div
@@ -686,11 +489,9 @@ export default function App() {
               desc="Setiap materi punya tujuan berbeda. Paket dan ruang lingkup pekerjaan dapat disesuaikan setelah konsultasi."
             />
             <div className="grid gap-6 lg:grid-cols-3">
-              {packages.map((p, i) => (
+              {packages.map((p) => (
                 <article
                   key={p.name}
-                  data-reveal
-                  style={{ "--d": `${i * 110}ms` }}
                   className={`relative flex flex-col rounded-3xl border p-7 transition hover:-translate-y-1 hover:shadow-xl ${p.color === "orange" ? "border-[#F7963A] bg-white shadow-xl shadow-orange-100" : "border-blue-100 bg-white shadow-sm"}`}
                 >
                   {p.color === "orange" && (
@@ -742,10 +543,7 @@ export default function App() {
         </section>
 
         <section className="bg-gradient-to-r from-[#024C99] to-[#009DFC] px-5 py-16 text-white sm:px-8">
-          <div
-            data-reveal
-            className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 md:flex-row md:items-center"
-          >
+          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-7 md:flex-row md:items-center">
             <div>
               <p className="text-xs font-extrabold uppercase tracking-[.22em] text-white/65">
                 Mulai dari ide Anda
@@ -769,7 +567,7 @@ export default function App() {
 
         <section className="px-5 py-20 sm:px-8">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.8fr_1.2fr]">
-            <div data-reveal>
+            <div>
               <p className="text-xs font-extrabold uppercase tracking-[.22em] text-[#009DFC]">
                 Pertanyaan umum
               </p>
@@ -781,7 +579,7 @@ export default function App() {
                 bisa membantu.
               </p>
             </div>
-            <div data-reveal style={{ "--d": "120ms" }} className="space-y-3">
+            <div className="space-y-3">
               {[
                 {
                   q: "Apa itu SmartDeck?",
@@ -806,25 +604,18 @@ export default function App() {
                 >
                   <button
                     onClick={() => setFaqOpen(faqOpen === i ? -1 : i)}
-                    aria-expanded={faqOpen === i}
                     className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left font-extrabold text-slate-800"
                   >
                     <span>{f.q}</span>
                     <span
-                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-lg leading-none transition-all duration-500 ${faqOpen === i ? "rotate-45 bg-[#024C99] text-white" : "bg-blue-50 text-[#024C99]"}`}
+                      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${faqOpen === i ? "bg-[#024C99] text-white" : "bg-blue-50 text-[#024C99]"}`}
                     >
-                      +
+                      {faqOpen === i ? "−" : "+"}
                     </span>
                   </button>
-                  <div
-                    className={`grid transition-[grid-template-rows,opacity] duration-500 ${faqOpen === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="px-5 pb-5 leading-7 text-slate-500">
-                        {f.a}
-                      </p>
-                    </div>
-                  </div>
+                  {faqOpen === i && (
+                    <p className="px-5 pb-5 leading-7 text-slate-500">{f.a}</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -836,7 +627,7 @@ export default function App() {
           className="bg-[#F7FBFF] px-5 py-20 sm:px-8 md:py-24"
         >
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.9fr_1.1fr]">
-            <div data-reveal>
+            <div>
               <p className="text-xs font-extrabold uppercase tracking-[.22em] text-[#009DFC]">
                 Mari berkolaborasi
               </p>
@@ -881,8 +672,6 @@ export default function App() {
               </div>
             </div>
             <form
-              data-reveal
-              style={{ "--d": "120ms" }}
               onSubmit={submitContact}
               className="rounded-[2rem] border border-blue-100 bg-white p-6 shadow-xl shadow-blue-100/60 sm:p-9"
             >
@@ -951,67 +740,15 @@ export default function App() {
                 Lanjutkan ke WhatsApp ↗
               </button>
               <p className="mt-3 text-center text-xs leading-5 text-slate-400">
-                Pesan akan dibuka di WhatsApp untuk Anda periksa dan kirim ke
-                SmartDeck.
+                Pesan akan dibuka di WhatsApp untuk Anda periksa dan kirim.
+                Nomor tujuan dapat diatur sesuai kontak bisnis SmartDeck.
               </p>
             </form>
           </div>
         </section>
       </main>
 
-      <footer className="bg-[#01366D] px-5 pb-8 pt-14 text-white sm:px-8">
-        <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <Brand light />
-            <p className="mt-5 max-w-xs text-sm leading-7 text-white/60">
-              Membantu pendidik menciptakan pengalaman belajar yang lebih
-              visual, interaktif, dan bermakna melalui Canva dan Wordwall.
-            </p>
-          </div>
-          <div>
-            <h4 className="mb-4 font-extrabold text-[#F7963A]">Navigasi</h4>
-            <div className="grid gap-3 text-sm text-white/70">
-              {nav.map(([label, href]) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="transition hover:text-white"
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h4 className="mb-4 font-extrabold text-[#F7963A]">Layanan</h4>
-            <div className="grid gap-3 text-sm text-white/70">
-              <a href="#layanan">Media Canva</a>
-              <a href="#layanan">Evaluasi Wordwall</a>
-              <a href="#paket">Paket kombinasi</a>
-              <a href="#kontak">Konsultasi proyek</a>
-            </div>
-          </div>
-          <div>
-            <h4 className="mb-4 font-extrabold text-[#F7963A]">
-              Hubungi SmartDeck
-            </h4>
-            <p className="text-sm leading-7 text-white/65">
-              Punya pertanyaan atau ide media pembelajaran? Ceritakan melalui
-              formulir konsultasi.
-            </p>
-            <a
-              href="#kontak"
-              className="mt-4 inline-flex rounded-full bg-[#F7963A] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-orange-500"
-            >
-              Mulai konsultasi ↗
-            </a>
-          </div>
-        </div>
-        <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-white/45">
-          © {new Date().getFullYear()} SmartDeck. Media pembelajaran interaktif
-          Canva + Wordwall.
-        </div>
-      </footer>
+      <Footer />
     </div>
-  );
+  );  
 }
