@@ -10,11 +10,11 @@ import CTA from "./partials/CTA";
 import FAQ from "./partials/FAQ";
 import Testimoni from "./partials/Testimonials";
 // import Kontak from "./components/Kontak";
-
 import Footer from "./partials/Footer";
 
 import ScrollReveal from "./partials/ScrollReveal";
 import Brand from "./partials/Brand"
+import { Analytics } from "@vercel/analytics/react";
 export const nomorwa =  "6285166817961";
 const App = () => {
   return (
@@ -63,7 +63,7 @@ const App = () => {
           <Kontak />
         </ScrollReveal> */}
       </main>
-
+<Analytics />
       <Footer />
     </div>
   );
