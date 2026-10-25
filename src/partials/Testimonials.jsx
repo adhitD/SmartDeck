@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhgbQ6Ta3B2xOxL6D24dh6BQuUjCqXlzS1sf2mAYpcGewiLmayFlIy5yb4_9udfjGT/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMvMt-PiMvLr3wWvLs-klpbh7s5PA0njzFX4JsPFdCkbyqpHQjO-7QTZmVYLQcy5Es/exec";
 
 function getVisitorId() {
   const key = "smartdeck_visitor_id";
@@ -305,7 +305,7 @@ async function handleSubmit(e) {
                 />
               </div>
 
-              <div>
+              <div className="hidden">
                 <label htmlFor="testimonial-date" className="mb-2 block text-sm font-bold text-slate-700">
                   Tanggal
                 </label>

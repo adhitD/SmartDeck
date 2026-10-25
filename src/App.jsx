@@ -15,7 +15,7 @@ import Footer from "./partials/Footer";
 
 import ScrollReveal from "./partials/ScrollReveal";
 import Brand from "./partials/Brand"
-export const nomorwa =  "087872146450";
+export const nomorwa =  "6285166817961";
 const App = () => {
   return (
 
