@@ -7,7 +7,7 @@ const nav = [
   ["Beranda", "#home"],
   ["Layanan", "#layanan"],
   ["Tentang", "#tentang"],
-  ["Kontak", "#kontak"],
+ 
 ];
 
 export default function Navbar() {
