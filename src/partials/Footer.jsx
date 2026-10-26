@@ -1,6 +1,5 @@
 import Brand from "./Brand";
-import { nomorwa } from "../config";
-import { trackClick } from "../lib/track";
+import { nomorwa } from "../App.jsx";
 import {
   FaInstagram,
   FaFacebook,
@@ -111,7 +110,6 @@ export default function Footer() {
           </p>
 
           <a
-            onClick={() => trackClick("footer")}
             href={`https://wa.me/${nomorwa}?text=Halo%20SmartDeck%2C%20saya%20ingin%20konsultasi%20gratis.`}
             className="mt-4 inline-flex rounded-full bg-[#F7963A] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-orange-500"
           >
