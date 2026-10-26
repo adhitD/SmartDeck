@@ -1,19 +1,6 @@
-
 import { useEffect, useState } from "react";
-
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMvMt-PiMvLr3wWvLs-klpbh7s5PA0njzFX4JsPFdCkbyqpHQjO-7QTZmVYLQcy5Es/exec";
-
-function getVisitorId() {
-  const key = "smartdeck_visitor_id";
-  let id = localStorage.getItem(key);
-
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-  }
-
-  return id;
-}
+import { SCRIPT_URL } from "../config";
+import { getVisitorId } from "../lib/track";
 
 function loadPublicData(onSuccess) {
   const callbackName =
